@@ -1,0 +1,32 @@
+### Upload Image
+POST http://localhost:3000/api/upload/image
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="test-image.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/test-image.jpg
+------WebKitFormBoundary--
+
+### Upload Avatar (requires login)
+POST http://localhost:3000/api/upload/avatar
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="avatar.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/avatar.jpg
+------WebKitFormBoundary--
+
+### Upload Document
+POST http://localhost:3000/api/upload/document
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="document.pdf"
+Content-Type: application/pdf
+
+< ./path/to/your/document.pdf
+------WebKitFormBoundary--

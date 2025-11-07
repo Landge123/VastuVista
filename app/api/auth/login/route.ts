@@ -1,37 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import { prisma } from '@/lib/db';
-import { loginSchema } from '@/lib/validation';
-import { generateToken } from '@/lib/auth';
-import { successResponse, errorResponse, validationErrorResponse } from '@/lib/response';
-import { z } from 'zod';
+import { getUserByEmail } from '@/lib/db/users';
+import { verifyPassword } from '@/lib/auth/password';
+import { generateTokens } from '@/lib/auth/jwt';
+import { setAuthCookies } from '@/lib/auth/cookies';
 
 export async function POST(request: NextRequest) {
     try {
-        // Parse and validate request body
         const body = await request.json();
-        const validatedData = loginSchema.parse(body);
+        const { email, password } = body;
 
-        const { email, password } = validatedData;
+        // Validation
+        if (!email || !password) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Email and password are required',
+                },
+                { status: 400 }
+            );
+        }
 
-        // Find user by email
-        const user = await prisma.user.findUnique({
-            where: { email },
-        });
-
+        // Get user by email
+        const user = await getUserByEmail(email);
         if (!user) {
-            return errorResponse('Invalid email or password', 401);
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Invalid email or password',
+                },
+                { status: 401 }
+            );
+        }
+
+        // Check if user is active
+        if (!user.isActive) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Account is deactivated. Please contact support.',
+                },
+                { status: 403 }
+            );
         }
 
         // Verify password
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
+        const isPasswordValid = await verifyPassword(password, user.password);
         if (!isPasswordValid) {
-            return errorResponse('Invalid email or password', 401);
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Invalid email or password',
+                },
+                { status: 401 }
+            );
         }
 
-        // Generate JWT token
-        const token = generateToken({
+        // Generate tokens
+        const tokens = generateTokens({
             userId: user.id,
             email: user.email,
             role: user.role,
@@ -40,35 +65,34 @@ export async function POST(request: NextRequest) {
         // Create response
         const response = NextResponse.json(
             {
+                success: true,
                 message: 'Login successful',
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    name: user.name,
-                    role: user.role,
+                data: {
+                    user: {
+                        id: user.id,
+                        email: user.email,
+                        name: user.name,
+                        role: user.role,
+                    },
+                    accessToken: tokens.accessToken,
                 },
-                token,
             },
             { status: 200 }
         );
 
-        // Set HTTP-only cookie
-        response.cookies.set('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 24 * 7, // 7 days
-            path: '/',
-        });
+        // Set cookies
+        setAuthCookies(response, tokens.accessToken, tokens.refreshToken);
 
         return response;
     } catch (error) {
         console.error('Login error:', error);
-
-        if (error instanceof z.ZodError) {
-            return validationErrorResponse(error);
-        }
-
-        return errorResponse('Failed to login', 500);
+        return NextResponse.json(
+            {
+                success: false,
+                message: 'Login failed',
+                error: error instanceof Error ? error.message : 'Unknown error',
+            },
+            { status: 500 }
+        );
     }
 }
