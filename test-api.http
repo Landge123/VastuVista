@@ -1,0 +1,281 @@
+### Variables
+@baseUrl = http://localhost:3000
+@email = test@example.com
+@password = password123
+@token = YOUR_TOKEN_HERE
+
+###############################################
+# AUTHENTICATION TESTS
+###############################################
+
+### 1. Register a New User
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}",
+  "name": "Test User"
+}
+
+###
+
+### 2. Login (Get Token)
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+###
+
+### 3. Get Current User (requires login)
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+
+###
+
+### 4. Logout
+POST {{baseUrl}}/api/auth/logout
+
+###
+
+###############################################
+# PROJECTS TESTS
+###############################################
+
+### 5. Create a New Project
+# @name createProject
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "My Dream House",
+  "description": "A 1000 sqft house with Vastu compliance"
+}
+
+###
+
+### 6. Get All Projects
+GET {{baseUrl}}/api/projects
+Authorization: Bearer {{token}}
+
+###
+
+### 7. Get Single Project by ID
+# Replace PROJECT_ID_HERE with actual project ID
+GET {{baseUrl}}/api/projects/PROJECT_ID_HERE
+Authorization: Bearer {{token}}
+
+###
+
+### 8. Update Project
+# Replace PROJECT_ID_HERE with actual project ID
+PATCH {{baseUrl}}/api/projects/PROJECT_ID_HERE
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Updated House Design",
+  "description": "Updated description with more details"
+}
+
+###
+
+### 9. Delete Project
+# Replace PROJECT_ID_HERE with actual project ID
+DELETE {{baseUrl}}/api/projects/PROJECT_ID_HERE
+Authorization: Bearer {{token}}
+
+###
+
+###############################################
+# DESIGNS TESTS
+###############################################
+
+### 10. Create a New Design
+# @name createDesign
+POST {{baseUrl}}/api/designs
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Traditional Vastu House",
+  "description": "A house design following Vastu principles",
+  "dimensions": {
+    "length": 1000,
+    "width": 1000,
+    "unit": "sqft"
+  },
+  "rooms": [
+    {
+      "name": "Main Kitchen",
+      "type": "Kitchen",
+      "direction": "Southeast",
+      "position": {
+        "x": 10,
+        "y": 10
+      },
+      "dimensions": {
+        "width": 200,
+        "height": 150
+      }
+    },
+    {
+      "name": "Master Bedroom",
+      "type": "Master Bedroom",
+      "direction": "Southwest",
+      "position": {
+        "x": 5,
+        "y": 5
+      },
+      "dimensions": {
+        "width": 300,
+        "height": 250
+      }
+    },
+    {
+      "name": "Living Room",
+      "type": "Living Room",
+      "direction": "Northeast",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "dimensions": {
+        "width": 400,
+        "height": 300
+      }
+    }
+  ],
+  "projectId": "PROJECT_ID_HERE"
+}
+
+###
+
+### 11. Get All Designs
+GET {{baseUrl}}/api/designs
+Authorization: Bearer {{token}}
+
+###
+
+### 12. Get Designs by Project
+GET {{baseUrl}}/api/designs?projectId=PROJECT_ID_HERE
+Authorization: Bearer {{token}}
+
+###
+
+### 13. Get Single Design by ID
+# Replace DESIGN_ID_HERE with actual design ID
+GET {{baseUrl}}/api/designs/DESIGN_ID_HERE
+Authorization: Bearer {{token}}
+
+###
+
+### 14. Update Design
+# Replace DESIGN_ID_HERE with actual design ID
+PATCH {{baseUrl}}/api/designs/DESIGN_ID_HERE
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Updated Vastu House Design",
+  "description": "Modified design with better room placement"
+}
+
+###
+
+### 15. Delete Design
+# Replace DESIGN_ID_HERE with actual design ID
+DELETE {{baseUrl}}/api/designs/DESIGN_ID_HERE
+Authorization: Bearer {{token}}
+
+###
+
+###############################################
+# VASTU CHECKER TESTS
+###############################################
+
+### 16. Check Vastu Compliance (Good Design)
+POST {{baseUrl}}/api/designs/vastu-check
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "rooms": [
+    {
+      "name": "Main Kitchen",
+      "type": "Kitchen",
+      "direction": "Southeast",
+      "position": { "x": 10, "y": 10 }
+    },
+    {
+      "name": "Master Bedroom",
+      "type": "Master Bedroom",
+      "direction": "Southwest",
+      "position": { "x": 5, "y": 5 }
+    },
+    {
+      "name": "Living Room",
+      "type": "Living Room",
+      "direction": "Northeast",
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "name": "Pooja Room",
+      "type": "Pooja Room",
+      "direction": "Northeast",
+      "position": { "x": 2, "y": 2 }
+    },
+    {
+      "name": "Study Room",
+      "type": "Study Room",
+      "direction": "North",
+      "position": { "x": 8, "y": 0 }
+    }
+  ],
+  "dimensions": {
+    "length": 1000,
+    "width": 1000
+  }
+}
+
+###
+
+### 17. Check Vastu Compliance (Bad Design)
+POST {{baseUrl}}/api/designs/vastu-check
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "rooms": [
+    {
+      "name": "Kitchen",
+      "type": "Kitchen",
+      "direction": "North",
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "name": "Master Bedroom",
+      "type": "Master Bedroom",
+      "direction": "North",
+      "position": { "x": 5, "y": 0 }
+    },
+    {
+      "name": "Bathroom",
+      "type": "Bathroom",
+      "direction": "Northeast",
+      "position": { "x": 10, "y": 0 }
+    }
+  ],
+  "dimensions": {
+    "length": 1000,
+    "width": 1000
+  }
+}
+
+###

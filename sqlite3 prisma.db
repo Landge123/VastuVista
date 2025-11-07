@@ -1,0 +1,28 @@
+my-v0-project/
+├── app/
+│   ├── api/
+│   │   ├── auth/
+│   │   │   ├── login/route.ts
+│   │   │   ├── register/route.ts
+│   │   │   └── logout/route.ts
+│   │   ├── users/
+│   │   │   ├── route.ts
+│   │   │   └── [id]/route.ts
+│   │   ├── designs/
+│   │   │   ├── route.ts
+│   │   │   ├── [id]/route.ts
+│   │   │   └── vastu-check/route.ts
+│   │   ├── ai/
+│   │   │   ├── generate-design/route.ts
+│   │   │   └── analyze/route.ts
+│   │   └── upload/route.ts
+│   └── ... (your frontend pages)
+├── lib/
+│   ├── db.ts
+│   ├── auth.ts
+│   └── validation.ts
+├── models/
+│   ├── User.ts
+│   ├── Design.ts
+│   └── Project.ts
+└── middleware.ts
