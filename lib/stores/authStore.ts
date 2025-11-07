@@ -119,12 +119,21 @@ export const useAuthStore = create<AuthState>()(
                         });
                     }
                 } catch (error: any) {
-                    console.error('Fetch current user error:', error);
-                    set({
-                        user: null,
-                        isAuthenticated: false,
-                        isLoading: false,
-                    });
+                    // Silently handle 401 errors (user not logged in)
+                    if (error.response?.status === 401) {
+                        set({
+                            user: null,
+                            isAuthenticated: false,
+                            isLoading: false,
+                        });
+                    } else {
+                        console.error('Fetch current user error:', error);
+                        set({
+                            user: null,
+                            isAuthenticated: false,
+                            isLoading: false,
+                        });
+                    }
                 }
             },
 

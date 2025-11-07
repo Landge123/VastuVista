@@ -1,231 +1,89 @@
-"use client"
+import Link from 'next/link';
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, Compass, Home, Lightbulb, Zap } from "lucide-react"
-import { SiteHeader } from "@/components/site-header"
-
-export default function HomePage() {
-  const [isScrolled, setIsScrolled] = useState(false)
-
-  const vastuPrinciples = [
-    {
-      icon: Compass,
-      title: "Directional Harmony",
-      description: "Optimize room placement and orientation based on cardinal directions and energy flow principles.",
-    },
-    {
-      icon: Home,
-      title: "Space Optimization",
-      description: "Balance dimensions and proportions to create harmonious living and working environments.",
-    },
-    {
-      icon: Lightbulb,
-      title: "Elemental Balance",
-      description: "Integrate earth, water, fire, air, and space elements in perfect equilibrium.",
-    },
-    {
-      icon: Zap,
-      title: "Energy Flow",
-      description: "Ensure positive energy circulation throughout your architectural design.",
-    },
-  ]
-
+export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <SiteHeader currentPage="home" />
-
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-12 sm:py-20 lg:py-32 geometric-pattern">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground mb-4 sm:mb-6 leading-tight">
-              Design Spaces with
-              <br className="hidden sm:inline" />
-              <span className="text-primary">Ancient Wisdom</span>
-            </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8">
-              Harness Vastu principles with modern technology to create harmonious, perfectly balanced architectural
-              spaces that enhance well-being and prosperity.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Link href="/analyzer">
-                <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-sm sm:text-base">
-                  Start Analysis
-                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
-                </Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <nav className="bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-bold">Your App</h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link href="/login" className="text-blue-600 hover:text-blue-700">
+                Login
               </Link>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto text-sm sm:text-base bg-transparent">
-                Learn More
-              </Button>
+              <Link href="/register" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Sign Up
+              </Link>
             </div>
           </div>
-
-          <div className="relative h-48 sm:h-64 lg:h-80 rounded-lg sm:rounded-xl overflow-hidden border border-border shadow-lg">
-            <img
-              src="/ancient-indian-architecture-vastu-mandala-sacred-g.jpg"
-              alt="Vastu architecture design with sacred geometry and traditional Indian patterns"
-              className="w-full h-full object-cover"
-            />
-          </div>
         </div>
-      </section>
+      </nav>
 
-      {/* Principles Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-muted/40">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
-              Vastu Design Principles
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-              Our AI integrates five core Vastu principles to optimize every aspect of your architectural design
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {vastuPrinciples.map((principle, idx) => {
-              const Icon = principle.icon
-              return (
-                <Card key={idx} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-                      <Icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-base sm:text-lg">{principle.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-xs sm:text-sm">{principle.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="py-12 sm:py-16 lg:py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground text-center mb-8 sm:mb-12 lg:mb-16">
-            How It Works
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Welcome to Your Application
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              {
-                step: "1",
-                title: "Input Space Details",
-                desc: "Enter your room dimensions, orientation, and intended use.",
-              },
-              {
-                step: "2",
-                title: "AI Analysis",
-                desc: "Our system analyzes against Vastu principles and generates insights.",
-              },
-              {
-                step: "3",
-                title: "Get Recommendations",
-                desc: "Receive specific, actionable recommendations for optimal design.",
-              },
-            ].map((item) => (
-              <div key={item.step} className="relative">
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg mb-4">
-                    {item.step}
-                  </div>
-                  <h3 className="font-semibold text-base sm:text-lg mb-2 text-foreground">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-primary text-primary-foreground">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">Ready to Optimize Your Space?</h2>
-          <p className="text-base sm:text-lg mb-6 sm:mb-8 opacity-90">
-            Join architects and designers worldwide who use VastuVista to create harmonious, balanced spaces.
+          <p className="text-xl text-gray-600">
+            Choose a feature to get started
           </p>
-          <Link href="/analyzer">
-            <Button size="lg" variant="secondary" className="text-sm sm:text-base">
-              Start Your Analysis Now
-              <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
-            </Button>
+        </div>
+
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link href="/floor-plan" className="block">
+            <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Floor Plan</h3>
+              <p className="text-gray-600 text-sm">Design and visualize floor plans</p>
+            </div>
+          </Link>
+
+          <Link href="/analyzer" className="block">
+            <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Analyzer</h3>
+              <p className="text-gray-600 text-sm">Analyze and optimize designs</p>
+            </div>
+          </Link>
+
+          <Link href="/ai-assistant" className="block">
+            <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">AI Assistant</h3>
+              <p className="text-gray-600 text-sm">Get AI-powered suggestions</p>
+            </div>
+          </Link>
+
+          <Link href="/dashboard" className="block">
+            <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer border-2 border-blue-200">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Dashboard</h3>
+              <p className="text-gray-600 text-sm">Protected - Requires login</p>
+            </div>
           </Link>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-border bg-muted/40 py-8 sm:py-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
-            <div>
-              <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">VastuVista</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                Designing spaces with ancient wisdom and modern technology.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3 sm:mb-4 text-xs sm:text-sm">Product</h4>
-              <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
-                <li>
-                  <Link href="/analyzer" className="hover:text-foreground transition">
-                    Analyzer
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/floorplan" className="hover:text-foreground transition">
-                    Floor Plan
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/dashboard" className="hover:text-foreground transition">
-                    Dashboard
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3 sm:mb-4 text-xs sm:text-sm">Resources</h4>
-              <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="hover:text-foreground transition">
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition">
-                    Guides
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3 sm:mb-4 text-xs sm:text-sm">Company</h4>
-              <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="hover:text-foreground transition">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-foreground transition">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border pt-6 sm:pt-8 text-center text-xs sm:text-sm text-muted-foreground">
-            <p>&copy; 2025 VastuVista. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </main>
-  )
+      </main>
+    </div>
+  );
 }

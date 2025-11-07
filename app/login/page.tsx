@@ -1,106 +1,128 @@
-"use client"
+'use client';
 
-import type React from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { SiteHeader } from "@/components/site-header"
-import { useState } from "react"
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
-  const [isLogin, setIsLogin] = useState(true)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [name, setName] = useState("")
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log(isLogin ? "Login" : "Sign Up", { email, password, name })
-  }
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError('');
 
-  return (
-    <main className="min-h-screen bg-background">
-      <SiteHeader currentPage="login" />
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/auth/login`,
+                { email, password },
+                { withCredentials: true }
+            );
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 lg:py-24 min-h-[calc(100vh-64px)] flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-2xl sm:text-3xl">{isLogin ? "Welcome Back" : "Create Account"}</CardTitle>
-            <CardDescription>
-              {isLogin
-                ? "Sign in to your VastuVista account to continue"
-                : "Join VastuVista to design harmonious spaces"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
+            if (response.data.success) {
+                toast.success('Login successful!');
+
+                // Force a small delay to ensure cookie is set
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // Use window.location for hard navigation (ensures cookie is properly set)
+                window.location.href = '/dashboard';
+            }
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.message || 'Login failed';
+            setError(errorMessage);
+            toast.error(errorMessage);
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
+                    <p className="text-gray-600 mt-2">Sign in to your account</p>
                 </div>
-              )}
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                            placeholder="you@example.com"
+                            disabled={isLoading}
+                        />
+                    </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
+                    <div>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                            placeholder="••••••••"
+                            disabled={isLoading}
+                        />
+                    </div>
 
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
-                {isLogin ? "Sign In" : "Create Account"}
-              </Button>
-            </form>
+                    {error && (
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                            {error}
+                        </div>
+                    )}
 
-            <div className="mt-4 text-center text-sm">
-              <p className="text-muted-foreground">
-                {isLogin ? "Don't have an account?" : "Already have an account?"}
-                <button onClick={() => setIsLogin(!isLogin)} className="ml-1 text-primary hover:underline font-medium">
-                  {isLogin ? "Sign up" : "Sign in"}
-                </button>
-              </p>
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                    >
+                        {isLoading ? (
+                            <span className="flex items-center justify-center">
+                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Signing in...
+                            </span>
+                        ) : (
+                            'Sign In'
+                        )}
+                    </button>
+                </form>
+
+                <div className="mt-6 text-center">
+                    <p className="text-gray-600">
+                        Don't have an account?{' '}
+                        <Link href="/register" className="text-blue-600 hover:text-blue-700 font-medium">
+                            Sign up
+                        </Link>
+                    </p>
+                </div>
+
+                <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <p className="text-xs font-semibold text-gray-700 mb-2">Test Credentials:</p>
+                    <p className="text-xs text-gray-600">Email: admin@example.com</p>
+                    <p className="text-xs text-gray-600">Password: password123</p>
+                </div>
             </div>
-
-            <div className="mt-6 pt-6 border-t border-border">
-              <p className="text-xs text-center text-muted-foreground mb-3">Or continue with</p>
-              <div className="grid grid-cols-2 gap-3">
-                <Button variant="outline" className="text-xs bg-transparent">
-                  Google
-                </Button>
-                <Button variant="outline" className="text-xs bg-transparent">
-                  GitHub
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </main>
-  )
+        </div>
+    );
 }

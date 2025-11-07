@@ -41,6 +41,7 @@ export async function createUser(data: {
     password: string;
     name?: string | null;
     role?: 'USER' | 'ADMIN' | 'MODERATOR';
+    isActive?: boolean;  // ✅ Make sure this is here
 }) {
     try {
         const user = await prisma.user.create({
@@ -49,6 +50,7 @@ export async function createUser(data: {
                 password: data.password,
                 name: data.name || null,
                 role: data.role || 'USER',
+                isActive: data.isActive !== undefined ? data.isActive : true,  // ✅ Default to true
             },
         });
         return user;
@@ -62,6 +64,7 @@ export async function createUser(data: {
         throw new Error('Failed to create user');
     }
 }
+
 
 // Update user
 export async function updateUser(

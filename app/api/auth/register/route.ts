@@ -47,12 +47,13 @@ export async function POST(request: NextRequest) {
         // Hash password
         const hashedPassword = await hashPassword(password);
 
-        // Create user
+        // Create user with isActive set to true
         const user = await createUser({
             email,
             password: hashedPassword,
             name: name || null,
             role: 'USER',
+            isActive: true,  // ✅ FIXED: Set active by default
         });
 
         // Generate tokens
